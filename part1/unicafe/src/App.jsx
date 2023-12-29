@@ -10,6 +10,45 @@ const Count = (props) => {
   <button onClick={props.onClick}>{props.text}</button>
   </>);
 }
+
+const StatisticLine = (props) => { 
+  return (
+    <>
+      <td>{props.text}</td>
+      <td>: {props.val}</td>
+    </>
+  );
+};
+const Statistics = ({good,bad,total,neutral }) => {
+ const avg = (good - bad) / (total == 0 ? 1 : total);
+ const positive = (good / (total == 0 ? 1 : total)) * 100;
+  if (total != 0)
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <StatisticLine text={"Good"} val={good} />
+        </tr>
+        <tr>
+          <StatisticLine text={"Neutral"} val={neutral} />
+        </tr>
+        <tr>
+          <StatisticLine text={"Bad"} val={bad} />
+        </tr>
+        <tr>
+          <StatisticLine text={"All"} val={total} />
+        </tr>
+        <tr>
+          <StatisticLine text={"Average"} val={avg} />
+        </tr>
+        <tr>
+          <StatisticLine text={"Positive"} val={positive + "%"} />
+        </tr>
+      </tbody>
+    </table>
+  );
+};
+
 const App = () => {
   const title = ['Give Feedback', 'Statistics']
   const [good, setGood] = useState(0);
@@ -34,8 +73,7 @@ const App = () => {
     setTotal(good + bad + neutral + 1);
   };
 
-  const avg = (good - bad) / total; 
-  const positive = good / total * 100;
+  
   return (
     <>
       <Title title={title[0]} />
@@ -43,12 +81,9 @@ const App = () => {
       <Count onClick={neutralHandler} text={"neutral"} />
       <Count onClick={badHandler} text={"bad"} />
       <Title title={title[1]} />
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All : {total}</p>
-      <p>Average: {avg}</p>
-      <p>Positive { positive}%</p>
+     
+     
+      <Statistics good={good} bad={bad} total={total} neutral={ neutral} />
     </>
   );
  };
