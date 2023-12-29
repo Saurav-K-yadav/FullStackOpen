@@ -58,7 +58,6 @@ const App = () => {
       <Total parts={course.parts} />
     </div>
   );
-
 }
 
 export default App;
