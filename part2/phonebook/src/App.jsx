@@ -3,7 +3,7 @@ import axios from 'axios';
 import Inp from "./components/Inp"
 import Numbers from "./components/numbers";
 import SearchContact from "./components/contact";
-
+import services from './services/modules';
 
 const App = () => {
    const [persons, setPersons] = useState([]);
@@ -13,10 +13,9 @@ const App = () => {
   
   useEffect(() => {
     console.log('Fetching')
-    axios
-      .get('http://localhost:3001/persons')
+    services.getAll('http://localhost:3001/persons')
       .then((response) => {
-        setPersons(response.data);
+        setPersons(response);
       }
 
       )
@@ -59,14 +58,15 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-    axios.post("http://localhost:3001/persons", block).then(
-      response => console.log(response)
+    services.create(block).then(
+      response => {
+        console.log(response)
+        setPersons(persons.concat(response));
+        setNewName("");
+        setNewNumber("");
+      }
     ).catch(error => console.log(error));
-    setPersons(persons.concat(block));
-    console.log(persons);
 
-    setNewName("");
-    setNewNumber("");
   };
 
   let handleSearch = function (val) {
