@@ -18,12 +18,12 @@
     {
       "content": "a new note...",
       "id": 4,
-      "important": true
+      "important": false
     },
     {
       "content": "a new note...",
       "id": 5,
-      "important": true
+      "important": false
     },
     {
       "content": "a new note...",
@@ -33,7 +33,7 @@
     {
       "content": "a new note...",
       "id": 7,
-      "important": true
+      "important": false
     },
     {
       "content": "a new note...",
@@ -48,7 +48,7 @@
     {
       "content": "a new note...",
       "id": 10,
-      "important": true
+      "important": false
     },
     {
       "content": "a new note...",
