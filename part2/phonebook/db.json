@@ -19,37 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "d",
-      "number": "d",
-      "id": 5
-    },
-    {
-      "name": "f",
-      "number": "f",
-      "id": 6
-    },
-    {
-      "http://localhost:3001/persons": "",
-      "id": 7
-    },
-    {
-      "http://localhost:3001/persons": "",
-      "id": 8
-    },
-    {
-      "http://localhost:3001/persons": "",
-      "id": 9
-    },
-    {
-      "http://localhost:3001/persons": "",
-      "id": 10
-    },
-    {
-      "name": "fasfa",
-      "number": "adfas",
-      "id": 11
     }
   ]
 }

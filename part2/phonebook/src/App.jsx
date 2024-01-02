@@ -77,14 +77,32 @@ const App = () => {
   let handleSubmit = function (val) {
     val.preventDefault();
   };
+
+  let delContact = (contact) => {
+const result = window.confirm(`Delete ${contact.name} from your phonebook?`);
+    if (!result)
+    {return;}
+    
+    services.del(contact.id).then(() => {
+      setPersons(persons.filter(per=>per.id!==contact.id)
+      )
+    }).catch(error => console.log(error))
+
+    
+  }
   return (
     <div>
+      {persons.map
+        ((person) =>
+          (<li key={person.id} > {person.name}</li>))
+      
+      }
       <h1>Phonebook</h1>
  
       <SearchContact searchResult={searchResult} handleSearch={handleSearch} handleSubmit={handleSubmit} persons={ persons} />
       
       <Inp newName={newName} changeName={changeName} newNumber={newNumber} changeNumber={changeNumber} addName={ addName} />
-      <Numbers persons={persons}/>
+      <Numbers persons={persons} del={ delContact} />
     </div>
   );
 };
