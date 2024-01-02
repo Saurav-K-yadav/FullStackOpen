@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Inp from "./components/Inp";
 import Numbers from "./components/numbers";
 import SearchContact from "./components/contact";
 import services from "./services/modules";
-
+import "./App.css"
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [searchResult, setSearchResult] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [message, setMessage] = useState("...");
 
   useEffect(() => {
     console.log("Fetching");
     services.getAll("http://localhost:3001/persons").then((response) => {
       setPersons(response);
     });
+    setTimeout(() => {
+      setMessage("");
+    }, 5000);
   }, []);
 
   const changeName = function (event) {
@@ -54,6 +57,10 @@ const App = () => {
       });
       setNewName("");
       setNewNumber("");
+      setMessage(`Updated ${existingPerson.name}`)
+      setTimeout(()=>{
+        setMessage("")
+      }, 5000);
       return;
     }
 
@@ -67,6 +74,10 @@ const App = () => {
       .then((response) => {
         console.log(response);
         setPersons(persons.concat(response));
+        setMessage(`Added ${response.name}`);
+        setTimeout(() => {
+        setMessage("");
+        }, 5000);
         setNewName("");
         setNewNumber("");
       })
@@ -94,11 +105,21 @@ const App = () => {
       .del(contact.id)
       .then(() => {
         setPersons(persons.filter((per) => per.id !== contact.id));
+        setMessage(`Deleted ${contact.name}`);
+        setTimeout(() => {
+        setMessage("");
+        }, 5000);
       })
       .catch((error) => console.log(error));
   };
   return (
     <div>
+      <div>{
+        message === "" ?"":
+          <p className="alert">{message}</p>
+      }
+      </div>
+      
       <h1>Phonebook</h1>
 
       <SearchContact
