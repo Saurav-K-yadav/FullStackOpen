@@ -59,9 +59,12 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-
+    axios.post("http://localhost:3001/persons", block).then(
+      response => console.log(response)
+    ).catch(error => console.log(error));
     setPersons(persons.concat(block));
     console.log(persons);
+
     setNewName("");
     setNewNumber("");
   };
