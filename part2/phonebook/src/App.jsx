@@ -110,7 +110,12 @@ const App = () => {
         setMessage("");
         }, 5000);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setMessage(`Information of ${contact.name} is already removed`);
+        setTimeout(() => {
+          setMessage("");
+        }, 5000);
+      });
   };
   return (
     <div>
