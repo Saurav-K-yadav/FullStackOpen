@@ -17,5 +17,9 @@ const del = (id) => {
         console.log('deleted');
     }) 
 };
+const update = (id, val) => { 
+     let value=axios.put(`${url}/${id}`, val)
+        return value.then(response => response.data)
+}
 
-export default { getAll,create,del}
+export default { update,getAll,create,del}
