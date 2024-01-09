@@ -5,6 +5,8 @@ A Phonebook App with the following features:
   <li>See all contacts</li>
   <li>Search for contact</li>
   <li>Delete Contact</li>
+  <li>Prevent Duplication of contact</li>
+  <li>Update Contact</li>
 </ul>
 
 # TECH STACK
