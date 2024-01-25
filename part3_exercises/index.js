@@ -51,6 +51,31 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+const getId = () => {
+    let maxId =1
+    while (data.find(person => person.id === maxId))
+    {console.log(maxId);
+    
+        maxId = Math.floor(Math.random() * 10000)
+    }
+    return maxId 
+}
+
+app.post('/api/persons', (request, response) => {
+    let {name,number} = request.body
+    if (!(name && number)) {
+        return response.status(400).send(`No data`).end()
+    }
+    const entry = {
+        "id":getId(),
+        "name":name,
+        "number": number,
+    }
+    
+    data = data.concat(entry)
+    response.json(data)
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log('Server Running on PORT 3001');
