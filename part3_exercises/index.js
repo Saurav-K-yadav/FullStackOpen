@@ -32,9 +32,17 @@ app.get('/api/persons', (request, response) => {
 app.get('/info', (request, response) => {
     let count = data.length;
     response.status(200).send(`<div>Phonebook has info for ${String(count)} People <br>${new Date().toString()}<div>`).end()
-   
+})
 
-    
+app.get('/api/persons/:id', (request, response) => {
+    let id = Number(request.params.id)
+    let person = data.find(person => person.id === id)
+    if (!person) {
+        let msg="No such Entry exist"
+        return response.status(404).send(msg).end()
+        
+    }
+    response.json(person).status(200)
 })
 
 const PORT = 3001
