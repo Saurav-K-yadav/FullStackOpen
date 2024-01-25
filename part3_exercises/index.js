@@ -66,6 +66,9 @@ app.post('/api/persons', (request, response) => {
     if (!(name && number)) {
         return response.status(400).send(`No data`).end()
     }
+    if (data.find(person => person.name === name)) {
+        return response.status(400).send(`error: 'Name already exits' `).end()
+    }
     const entry = {
         "id":getId(),
         "name":name,
