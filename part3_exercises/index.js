@@ -70,14 +70,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    let id = Number(request.params.id)
-    let person = data.find(person => person.id === id)
-    if (!person) {
-        let msg="No such Entry exist"
-        return response.status(404).send(msg).end()
-        
-    }
-    response.json(person).status(200)
+    Contact.findById(request.params.id).then(note => {
+        response.json(note)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -86,32 +81,21 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-const getId = () => {
-    let maxId =1
-    while (data.find(person => person.id === maxId))
-    {console.log(maxId);
-    
-        maxId = Math.floor(Math.random() * 10000)
-    }
-    return maxId 
-}
-
 app.post('/api/persons', (request, response) => {
     let {name,number} = request.body
     if (!(name && number)) {
         return response.status(400).send(`No data`).end()
     }
-    if (data.find(person => person.name === name)) {
-        return response.status(400).send(`error: 'Name already exits' `).end()
-    }
-    const entry = {
-        "id":getId(),
+    // if (data.find(person => person.name === name)) {
+    //     return response.status(400).send(`error: 'Name already exits' `).end()
+    // }
+    const entry = new Contact({
         "name":name,
         "number": number,
-    }
-    
-    data = data.concat(entry)
-    response.json(data)
+    })
+    entry.save().then(savedNote=>{
+        response.json(savedNote)
+    })
 })
 
 app.use(unknownEndpoint)
