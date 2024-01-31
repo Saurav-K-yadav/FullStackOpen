@@ -50,9 +50,10 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.get('/info', (request, response) => {
-    let count = data.length;
-    response.status(200).send(`<div>Phonebook has info for ${String(count)} People <br>${new Date().toString()}<div>`).end()
+app.get('/info', (request, response, next) => {
+    Contact.find({}).then(result => {
+    response.status(200).send(`<div>Phonebook has info for ${String(result.length)} People <br>${new Date().toString()}<div>`).end()
+ }).catch(error=>next(error))
 })
 
 app.get('/api/persons/:id', (request, response,next) => {
