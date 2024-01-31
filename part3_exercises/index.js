@@ -63,10 +63,10 @@ app.get('/api/persons/:id', (request, response,next) => {
     })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response,next) => {
     let { name, number } = request.body
     if (!(name && number)) {
-        return response.status(400).send(`No data`).end()
+        next(error)
     }
     // if (data.find(person => person.name === name)) {
     //     return response.status(400).send(`error: 'Name already exits' `).end()
@@ -88,6 +88,17 @@ app.delete('/api/persons/:id', (request, response,next) => {
 
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+    const person = {
+        name: body.name,
+        number:body.number,
+    }
+
+    Contact.findByIdAndUpdate(request.params.id, person, { new: true }).then(updatedContact => {
+        response.json(updatedContact)
+    }).catch(error=>next(error))
+})
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
