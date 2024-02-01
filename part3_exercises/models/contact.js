@@ -18,8 +18,27 @@ mongoose.connect(url)
     })
 
 const contactSchema = new mongoose.Schema({
-    name: String,
-    number: Number,
+    name: {
+        type: String,
+        minlength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        minlength: 3,
+        required: true
+        ,
+        validate: {
+            validator: function (value) {
+                // Split the string into words
+                const words = value.split(/\s+/);
+
+                // Check if every word is a number
+                return words.every(word => !isNaN(word));
+            },
+            message: 'Every word must be a number'
+        }
+    }
 })
 
 contactSchema.set('toJSON', {

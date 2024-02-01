@@ -23,6 +23,9 @@ const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     }
+    else if (error.name === 'Validation Error'){
+        return response.status(400).json({error:error.message})
+    }
     next(error)
 }
 
@@ -66,19 +69,13 @@ app.get('/api/persons/:id', (request, response,next) => {
 
 app.post('/api/persons', (request, response,next) => {
     let { name, number } = request.body
-    if (!(name && number)) {
-        next(error)
-    }
-    // if (data.find(person => person.name === name)) {
-    //     return response.status(400).send(`error: 'Name already exits' `).end()
-    // }
     const entry = new Contact({
         "name": name,
         "number": number,
     })
     entry.save().then(savedNote => {
         response.json(savedNote)
-    })
+    }).catch(error=>next(error))
 })
 
 
@@ -90,13 +87,9 @@ app.delete('/api/persons/:id', (request, response,next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
-    const person = {
-        name: body.name,
-        number:body.number,
-    }
-
-    Contact.findByIdAndUpdate(request.params.id, person, { new: true }).then(updatedContact => {
+    const { name,number}=request.body
+    Contact.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
+        .then(updatedContact => {
         response.json(updatedContact)
     }).catch(error=>next(error))
 })
