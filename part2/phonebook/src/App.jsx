@@ -3,7 +3,7 @@ import Inp from "./components/Inp";
 import Numbers from "./components/numbers";
 import SearchContact from "./components/contact";
 import services from "./services/modules";
-import "./App.css"
+import "./App.css";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [searchResult, setSearchResult] = useState("");
@@ -51,15 +51,33 @@ const App = () => {
       const id = existingPerson.id;
 
       services.update(id, changedPerson).then((returnedPerson) => {
-        setPersons(
-          persons.map((person) => (person.id !== id ? person : returnedPerson))
-        );
+        
+        if (returnedPerson.name == "AxiosError") {
+          const content = returnedPerson.response.data 
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(content, 'text/html')
+          const preE = doc.querySelector('pre');
+          if(preE)
+          {
+            const textContent = preE.textContent || preE.innerHTML;
+            const errorMessage=textContent.split('.')
+            setMessage(errorMessage[0]);
+          }
+        
+        } else {
+          setPersons(
+            persons.map((person) =>
+              person.id !== id ? person : returnedPerson
+            )
+          );
+          setMessage(`Updated ${existingPerson.name}`);
+        }
       });
+
       setNewName("");
       setNewNumber("");
-      setMessage(`Updated ${existingPerson.name}`)
-      setTimeout(()=>{
-        setMessage("")
+      setTimeout(() => {
+        setMessage("");
       }, 5000);
       return;
     }
@@ -76,12 +94,25 @@ const App = () => {
         setPersons(persons.concat(response));
         setMessage(`Added ${response.name}`);
         setTimeout(() => {
-        setMessage("");
+          setMessage("");
         }, 5000);
         setNewName("");
         setNewNumber("");
       })
-      .catch((error) => console.log(error));
+      .catch(error => {
+        if (error.name == "AxiosError") {
+          const content = error.response.data
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(content, 'text/html')
+          const preE = doc.querySelector('pre');
+          if (preE) {
+            const textContent = preE.textContent || preE.innerHTML;
+            const errorMessage = textContent.split('.')
+            setMessage(errorMessage[0]);
+          }
+        
+        }
+      });
   };
 
   let handleSearch = function (val) {
@@ -107,7 +138,7 @@ const App = () => {
         setPersons(persons.filter((per) => per.id !== contact.id));
         setMessage(`Deleted ${contact.name}`);
         setTimeout(() => {
-        setMessage("");
+          setMessage("");
         }, 5000);
       })
       .catch((error) => {
@@ -119,12 +150,8 @@ const App = () => {
   };
   return (
     <div>
-      <div>{
-        message === "" ?"":
-          <p className="alert">{message}</p>
-      }
-      </div>
-      
+      <div>{message === "" ? "" : <p className="alert">{message}</p>}</div>
+
       <h1>Phonebook</h1>
 
       <SearchContact

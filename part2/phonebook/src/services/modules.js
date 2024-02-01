@@ -19,7 +19,7 @@ const del = (id) => {
 };
 const update = (id, val) => {
     let value = axios.put(`${url}/${id}`, val)
-    return value.then(response => response.data)
+    return value.then(response => response.data).catch(error=>error)
 }
 
 export default { update, getAll, create, del }
