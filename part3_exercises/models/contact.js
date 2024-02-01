@@ -25,18 +25,15 @@ const contactSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        minlength: 3,
+        minlength: 8,
         required: true
         ,
         validate: {
             validator: function (value) {
-                // Split the string into words
-                const words = value.split(/\s+/);
-
-                // Check if every word is a number
-                return words.every(word => !isNaN(word));
+                const regex = /^\d{2,3}-\d+$/;
+                return regex.test(value);
             },
-            message: 'Every word must be a number'
+            message: 'Incorrect Format'
         }
     }
 })
