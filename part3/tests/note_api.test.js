@@ -1,0 +1,72 @@
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const app = require('../app')
+const Note=require('../models/note')
+const api = supertest(app)
+const helper=require('./test_helper')
+
+
+beforeEach(async () => {
+    await Note.deleteMany({})
+    let nodeObject = new Note(helper.initialNotes[0])
+    await nodeObject.save()
+    nodeObject = new Note(helper.initialNotes[1])
+    await nodeObject.save()
+})
+
+test('notes are returned as json', async () => {
+    await api
+        .get('/api/notes')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+})
+
+test('all notes are returned', async () => {
+    const response = await api.get('/api/notes')
+
+    expect(response.body).toHaveLength(helper.initialNotes.length)
+})
+
+test('a specific note is within the returned notes', async () => {
+    const response = await api.get('/api/notes')
+
+    const contents = response.body.map(r => r.content)
+    expect(contents).toContain(
+        'Browser can execute only JavaScript'
+    )
+})
+
+test('Adding an valid notes', async () => {
+    
+    const newNote = {
+        content:'Async await function is working',
+        important:true 
+    }
+
+    await api.post('/api/notes').send(newNote).expect(201).expect('Content-Type', /application\/json/)
+
+    const notesAtEnd = await helper.notesInDb()
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1)
+
+    const contents = notesAtEnd.map(n => n.content)
+
+    expect(contents).toContain('Async await function is working')
+
+})
+
+test('Note without content is not added', async()=> {
+    const newNote = {
+        content: "",
+        important:true
+    }
+
+    await api.post('/api/notes').send(newNote).expect(400)
+    const notesAtEnd = await helper.notesInDb()
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length)
+
+}
+)
+
+afterAll(async () => {
+    await mongoose.connection.close()
+})
