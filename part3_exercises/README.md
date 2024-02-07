@@ -6,6 +6,7 @@ A phonebook app that stores the contact details, lets user perform CRUD operatio
 ## TOOLS AND TECHNOLOGIES
 * React
 * nodejs
+* MongoDb
 * axios( For Communication between frontend and backend)
 * vite
 * expressjs
