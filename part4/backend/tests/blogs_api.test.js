@@ -40,7 +40,6 @@ test('Unknown ids are rejected', async () => {
 })
 
 test('Id is defined', async () => {
-    // const blogs = await helper.blogsInDb()
     let allblogs = await api.get('/api/blogs')
     allblogs = allblogs.body.map(blog => blog)
     
@@ -49,6 +48,26 @@ test('Id is defined', async () => {
         expect(blog).not.toHaveProperty('_id')
     })
    },100000)
+
+
+describe('post', () => {
+    test('A valid blog can be added', async () => {
+        const newBlog = {
+            title: ' Temporary addition',
+            author: 'Saurav',
+            url: 'localhost',
+            likes: 400000000,
+        }
+        
+        await api.post('/api/blogs').send(newBlog).expect(201).
+        expect('Content-Type', /application\/json/)
+        const finalBlogs = await helper.blogsInDb()
+        expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
+        const titles = finalBlogs.map(blog => blog.title)
+        expect(titles).toContain(' Temporary addition')
+    })
+})
+
 
 afterAll(async () => {
     await mongoose.connection.close()
