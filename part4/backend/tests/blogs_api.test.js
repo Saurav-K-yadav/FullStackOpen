@@ -14,17 +14,17 @@ beforeEach(async () => {
     await BlogObject.save()
 })
 
-// test('All blogs are returned', async () => {
-//     const response=await api.get('/api/blogs')
-//     expect(response.body).toHaveLength(helper.initialBlog.length)
-// })
+test('All blogs are returned', async () => {
+    const response=await api.get('/api/blogs')
+    expect(response.body).toHaveLength(helper.initialBlog.length)
+})
 
-// test('A specific Blog is returned', async () => {
-//     const response = await api.get('/api/blogs')
+test('A specific Blog is returned', async () => {
+    const response = await api.get('/api/blogs')
     
-//     const titles = response.body.map(res => res.title)
-//     expect(titles).toContain(' The prince')
-// })
+    const titles = response.body.map(res => res.title)
+    expect(titles).toContain(' The prince')
+})
 
 test('A specific Blog is returned', async () => {
     const allNotes = (await helper.blogsInDb()).map(blog => blog.id)
@@ -36,9 +36,19 @@ test('A specific Blog is returned', async () => {
 
 test('Unknown ids are rejected', async () => {
     const response = await api.get(`/api/blogs/0007`)
-    // const titles = response.body.title
     expect(response.status).toBe(404)
 })
+
+test('Id is defined', async () => {
+    // const blogs = await helper.blogsInDb()
+    let allblogs = await api.get('/api/blogs')
+    allblogs = allblogs.body.map(blog => blog)
+    
+    allblogs.forEach(blog => {
+        expect(blog.id).toBeDefined
+        expect(blog).not.toHaveProperty('_id')
+    })
+   },100000)
 
 afterAll(async () => {
     await mongoose.connection.close()
