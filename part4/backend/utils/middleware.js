@@ -1,10 +1,12 @@
 const logger = require('./logger')
 
 const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
+    if (process.env.NODE_ENV !== 'test') {
+        console.log('Method:', request.method)
+        console.log('Path:  ', request.path)
+        console.log('Body:  ', request.body)
+        console.log('---')
+    }
     next()
 }
 
