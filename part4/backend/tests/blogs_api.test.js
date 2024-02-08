@@ -110,6 +110,18 @@ describe('post', () => {
 
 })
 
+describe('deleting blogs', () => { 
+    test('Deleting a blog', async () => {
+        const blogs = await helper.blogsInDb()
+        await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
+        const finalBlogs = await helper.blogsInDb()
+
+        expect(finalBlogs).toHaveLength(helper.initialBlog.length - 1)
+        const titles = finalBlogs.map(blog => blog.title)
+        expect(titles).not.toContain(blogs[0].title)
+
+    })
+})
 
 afterAll(async () => {
     await mongoose.connection.close()
