@@ -79,8 +79,35 @@ describe('post', () => {
         expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
         const likes = finalBlogs.map(blog => blog.likes)
         expect(likes).toContain(0)
-    
     })
+
+    test('Title is required to post', async () => {
+        const newBlog = [
+            {
+            author: 'Saurav',
+            url:'localhost',
+            likes:400000000,
+            }
+            , {
+                title: ' Temporary addition',
+                author: 'Saurav',
+                likes: 400000000,
+            },
+        ]
+
+        newBlog.forEach(async(blog) => {
+            await api.post('/api/blogs').send(blog).expect(400).
+            expect('Content-Type', /application\/json/)
+        })      
+        
+        const finalBlogs = await helper.blogsInDb()
+        expect(finalBlogs).toHaveLength(helper.initialBlog.length)
+        const titles = finalBlogs.map(blog => blog.title)
+        expect(titles).not.toContain(' Temporary addition')
+        const urls = finalBlogs.map(blog => blog.url)
+        expect(urls).not.toContain('localhost')
+    })
+
 })
 
 
