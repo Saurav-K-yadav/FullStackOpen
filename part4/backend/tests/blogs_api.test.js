@@ -58,13 +58,28 @@ describe('post', () => {
             url: 'localhost',
             likes: 400000000,
         }
-        
+
         await api.post('/api/blogs').send(newBlog).expect(201).
         expect('Content-Type', /application\/json/)
         const finalBlogs = await helper.blogsInDb()
         expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
         const titles = finalBlogs.map(blog => blog.title)
         expect(titles).toContain(' Temporary addition')
+    })
+
+    test('If likes is missing it default to 0', async () => {
+        const newBlog = {
+            title: ' Temporary addition',
+            author: 'Saurav',
+            url: 'localhost',
+        }
+        await api.post('/api/blogs').send(newBlog).expect(201).
+            expect('Content-Type', /application\/json/)
+        const finalBlogs = await helper.blogsInDb()
+        expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
+        const likes = finalBlogs.map(blog => blog.likes)
+        expect(likes).toContain(0)
+    
     })
 })
 
