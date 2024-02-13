@@ -5,6 +5,7 @@ const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
+const usersRouter=require('./controllers/users')
 const mongoose = require('mongoose') 
 
 mongoose.set('strictQuery', false)
@@ -27,7 +28,7 @@ app.use(middleware.requestLogger)
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
-
+app.use('/api/users',usersRouter)
 app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.unknownEndpoint)
