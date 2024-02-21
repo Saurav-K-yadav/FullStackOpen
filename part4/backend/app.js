@@ -29,6 +29,7 @@ app.use(middleware.requestLogger)
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
+app.use(middleware.tokenExtractor)
 
 app.use('/api/login',loginRouter)
 app.use('/api/users',usersRouter)
