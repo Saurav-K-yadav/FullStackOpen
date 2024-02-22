@@ -5,14 +5,44 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 const { json } = require('express')
+const jwt = require('jsonwebtoken')
+const bcrypt=require('bcrypt')
+const User=require('../models/user')
 
-
+let token1
 beforeEach(async () => {
     await Blog.deleteMany({})
-    let BlogObject = new Blog(helper.initialBlog[0])
+    await User.deleteMany({})
+    const password = await bcrypt.hash('SAURAV', 10)
+    let user = new User({
+        username: 'root',
+        name:'saurav',
+        passwordHash:password
+    })
+    await user.save()
+    const usertoken = {
+        username: user.username,
+        id:user._id
+    }
+    token1=jwt.sign(usertoken,process.env.SECRET)
+    let BlogObject = new Blog({
+        ...helper.initialBlog[0],
+        user: user.id
+    })
     await BlogObject.save()
-    BlogObject = new Blog(helper.initialBlog[1])
+    BlogObject = new Blog({
+        ...helper.initialBlog[1],
+        user:user.id
+    })
     await BlogObject.save()
+
+    // user = new User({
+    //     username: 'notroot',
+    //     name: 'sky',
+    //     passwordHash: await bcrypt.hash('sky',100)
+    // })
+    // await user.save()
+
 })
 describe('Initial Tests', () => { 
     test('All blogs are returned', async () => {
@@ -54,6 +84,7 @@ describe('Initial Tests', () => {
 
 
 describe('post', () => {
+  
     test('A valid blog can be added', async () => {
         const newBlog = {
             title: ' Temporary addition',
@@ -62,7 +93,7 @@ describe('post', () => {
             likes: 400000000,
         }
 
-        await api.post('/api/blogs').send(newBlog).expect(201).
+        await api.post('/api/blogs').send(newBlog).set('Authorization',`Bearer ${token1}`).expect(201).
             expect('Content-Type', /application\/json/)
         const finalBlogs = await helper.blogsInDb()
         expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
@@ -76,12 +107,22 @@ describe('post', () => {
             author: 'Saurav',
             url: 'localhost',
         }
-        await api.post('/api/blogs').send(newBlog).expect(201).
+        await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token1}`).expect(201).
             expect('Content-Type', /application\/json/)
         const finalBlogs = await helper.blogsInDb()
         expect(finalBlogs).toHaveLength(helper.initialBlog.length + 1)
         const likes = finalBlogs.map(blog => blog.likes)
         expect(likes).toContain(0)
+    })
+
+    test('If token is not provided', async () => {
+        const newBlog = {
+            title: ' Temporary addition',
+            author: 'Saurav',
+            url: 'localhost',
+        }
+        await api.post('/api/blogs').send(newBlog).expect(401)
+       
     })
 
     test('Title is required to post', async () => {
@@ -99,7 +140,7 @@ describe('post', () => {
         ]
 
         newBlog.forEach(async (blog) => {
-            await api.post('/api/blogs').send(blog).expect(400).
+            await api.post('/api/blogs').send(blog).set('Authorization', `Bearer ${token1}`).expect(400).
                 expect('Content-Type', /application\/json/)
         })
 
@@ -116,7 +157,7 @@ describe('post', () => {
 describe('deleting blogs', () => {
     test('Deleting a blog', async () => {
         const blogs = await helper.blogsInDb()
-        await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
+        await api.delete(`/api/blogs/${blogs[0].id}`).set('Authorization', `Bearer ${token1}`).expect(204)
         const finalBlogs = await helper.blogsInDb()
 
         expect(finalBlogs).toHaveLength(helper.initialBlog.length - 1)

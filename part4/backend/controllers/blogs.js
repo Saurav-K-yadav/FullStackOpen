@@ -34,12 +34,6 @@ blogsRouter.post('/', middleware.userExtractor,async(request, response,next) => 
     try {
         const body = request.body
         const user=request.user
-        // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-        // if(!decodedToken.id){
-        //     return response.status(401).json({error:'token invalid'})
-        // }
-
-        // const user = await User.findById(decodedToken.id)
         
         const blog = new Blog({
             title: body.title,
@@ -63,13 +57,7 @@ blogsRouter.delete('/:id', middleware.userExtractor,async (request, response, ne
     try {
         const { id } = request.params
         const user=request.user
-        // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-        // if (!request.token || !decodedToken.id) {
-        //     return response.status(401).json({ error: 'token invalid' })
-        // }
-
-        // const user = await User.findById(decodedToken.id)
-        const owner=await Blog.findById(id)
+           const owner=await Blog.findById(id)
         
         if (!owner) {
             response.status(401).json({error:'No such Blog exists'})
