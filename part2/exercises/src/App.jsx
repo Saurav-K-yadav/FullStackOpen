@@ -2,6 +2,8 @@ import Note from "./components/note";
 import { useState, useEffect } from "react";
 import Notification from "./components/notification";
 import noteService from "./services/notes";
+import loginService from "./services/login"
+import login from "./services/login";
 
 const Footer = () => {
   const footerStyle = {
@@ -25,7 +27,10 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("some error happened...");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password,setPassword]=useState('')
+  const [user,setUser]=useState(null)
 
   useEffect(() => {
     noteService.getAll().then((response) => {
@@ -78,10 +83,71 @@ const App = () => {
       });
   };
 
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    console.log('logging')
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      setErrorMessage("Sucessfully Loggedin");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  };
+
+  const loginForm = () => {
+  return (  <form onSubmit={handleLogin}>
+      <div>
+        Username
+        <input type="text"
+          value={username}
+          name="username"
+          onChange={({ target }) => { setUsername(target.value) }}
+        />
+      </div>
+      <div>
+        Password
+        <input type="password"
+          value={password}
+          name="password"
+          onChange={({ target }) => { setPassword(target.value) }}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  )
+  };
+
+  const noteForm = () => {
+   return( <form onSubmit={addNotes}>
+        <input value={newNote}
+          onChange={handleNoteChange} />
+        <button type="submit">save</button>
+    </form>)
+  }
+  
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
+
+      {user === null ? loginForm() :
+        <div>
+          <p>{user.name } logged-in</p>
+          {noteForm()}
+          </div>
+        }
+
 
       <ul>
         {notesToShow.map((note) => (
@@ -101,12 +167,12 @@ const App = () => {
           Show{showAll ? " Important" : " All"}
         </button>
       </ul>
-      <ul>
+      {/* <ul>
         <form onSubmit={addNotes}>
           <input value={newNote} onChange={handleNoteChange} required />
           <button type="submit">Save</button>
         </form>
-      </ul>
+      </ul> */}
       <Footer />
     </div>
   );
