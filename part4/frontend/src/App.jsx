@@ -3,7 +3,6 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import './App.css'
 import loginService from './services/login'
-import login from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,6 +17,15 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem('loggedBlogUser')
+    if (loggedUser) {
+      const tobeSet = JSON.parse(loggedUser)
+      setUser(tobeSet)
+      blogService.setToken(tobeSet.token)
+    }
+  },[])
+
   const handleLogin = async(event) => {
     event.preventDefault()
     console.log('Logging', username, password)
@@ -25,6 +33,9 @@ const App = () => {
       const currUser = await loginService.login({
         username,password
       })
+      window.localStorage.setItem('loggedBlogUser',JSON.stringify(currUser))
+      blogService.setToken(currUser.token)
+
       setUser(currUser)
       setUsername('')
       setPassword('')
@@ -65,6 +76,27 @@ const loginForm = () => {return (
   </form>
 );}
 
+  const handleLogOut = () => {
+    window.localStorage.removeItem('loggedBlogUser')
+    setUser('')
+    blogService.setToken(null)
+    window.location.reload();
+    setErrorMessage('Logged Out');
+    
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  } 
+  
+  const logOutForm = () => {
+    return (
+      <div>
+        <button onClick={handleLogOut}>Logout</button>
+    </div>
+  );
+   
+ } 
+  
 // const noteForm = () => {return(
 //   <form onSubmit={addNote}>
 //     <input value={newNote} onChange={handleNoteChange} />
@@ -81,11 +113,13 @@ const loginForm = () => {return (
         loginForm()
       ) : (
         <div>
-          <p>{user.name} logged-in</p>
-            <h2>Blogs</h2>
-            {blogs.map(blog =>
-              <Blog key={ blog.id} blog={blog}/>
-              )}
+          <p>
+            {user.name} logged-in {logOutForm()}
+          </p>
+          <h2>Blogs</h2>
+          {blogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
         </div>
       )}
     </div>
