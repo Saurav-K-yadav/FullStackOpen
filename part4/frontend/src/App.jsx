@@ -115,8 +115,16 @@ const loginForm = () => {return (
       setAuthor("")
       setTitle("")
       setUrl("")
+      setErrorMessage(`added ${newBlog.title}`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
     catch (error) {
+      setErrorMessage("operation failed");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
       console.log(error)
     }
  } 
