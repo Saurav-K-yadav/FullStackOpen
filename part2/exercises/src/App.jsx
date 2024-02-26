@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Notification from "./components/notification";
 import noteService from "./services/notes";
 import loginService from "./services/login"
-import login from "./services/login";
 
 const Footer = () => {
   const footerStyle = {
@@ -40,6 +39,15 @@ const App = () => {
       setErrorMessage(null);
     }, 5000);
   }, []);
+
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJson) { 
+      const user = JSON.parse(loggedUserJson)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  },[])
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
@@ -90,6 +98,9 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+      window.localStorage.setItem(
+        'loggedNoteappUser',JSON.stringify(user)
+      )
       noteService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -168,12 +179,7 @@ const App = () => {
           Show{showAll ? " Important" : " All"}
         </button>
       </ul>
-      {/* <ul>
-        <form onSubmit={addNotes}>
-          <input value={newNote} onChange={handleNoteChange} required />
-          <button type="submit">Save</button>
-        </form>
-      </ul> */}
+
       <Footer />
     </div>
   );
