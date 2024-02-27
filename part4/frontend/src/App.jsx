@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import './App.css'
 import loginService from './services/login'
 import LoginForm from './components/Login'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -58,25 +59,17 @@ const App = () => {
   }
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = {display: loginVisible?'':'none'}
-    
     return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}> Log in</button></div>
-        <div style={showWhenVisible}> 
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <button onClick={()=>setLoginVisible(false)}>cancel</button>
-      </div>
-   </div>
-);}
+      <Togglable buttonLabel='login'>
+        <LoginForm username={username}
+          password={password}
+          handlePasswordChange={({ target }) => { setPassword(target.value) }}
+          handleUsernameChange={({ target }) => { setUsername(target.value) }}
+          handleSubmit={handleLogin}
+        />
+      </Togglable >
+    );
+  }
 
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
