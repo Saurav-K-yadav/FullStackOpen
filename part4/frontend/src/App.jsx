@@ -16,7 +16,7 @@ const App = () => {
   
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort(function(a,b){return b.likes-a.likes}) )
     )  
   }, [])
 
@@ -127,11 +127,15 @@ const App = () => {
       id: blog.id,
       likes:blog.likes+1
       }
-    console.log(`Our Blog ${newBlog}`)
+    // console.log(`Our Blog ${newBlog}`)
     try {
       await blogService.update(newBlog);
-      const newValues=blogs.filter(blog=>blog.id!=newBlog.id)
-      setBlogs(newValues.concat(newBlog));
+      let newValues=blogs.filter(blog=>blog.id!=newBlog.id)
+      newValues=newValues.concat(newBlog)
+      // setBlogs(newValues.concat(newBlog));
+       setBlogs(newValues.sort(function (a, b) {
+         return b.likes - a.likes;
+       }))
     }
     
     catch (error) {
