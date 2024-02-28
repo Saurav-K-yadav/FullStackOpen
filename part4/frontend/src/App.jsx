@@ -93,6 +93,7 @@ const App = () => {
     {
       await blogService.create(newBlog)
       console.log(newBlog)
+      newBlog = { ...newBlog,likes:0,user:user}
       setBlogs(blogs.concat(newBlog))
 
       setErrorMessage(`added ${newBlog.title}`);
@@ -117,6 +118,30 @@ const App = () => {
         
     );
   }
+
+  const addLikes = async(blog) => {
+    const newBlog={
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      id: blog.id,
+      likes:blog.likes+1
+      }
+    console.log(`Our Blog ${newBlog}`)
+    try {
+      await blogService.update(newBlog);
+      const newValues=blogs.filter(blog=>blog.id!=newBlog.id)
+      setBlogs(newValues.concat(newBlog));
+    }
+    
+    catch (error) {
+      setErrorMessage("operation failed");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+      console.log(error);
+    }
+  } 
   
   return (
     <div>
@@ -131,7 +156,7 @@ const App = () => {
           <div>{blogForm()}</div>
           <h2>Blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} user={ user.name} />
+            <Blog key={blog.id} blog={blog} addLikes={ addLikes} />
           ))}
         </div>
       )}

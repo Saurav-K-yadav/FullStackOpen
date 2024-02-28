@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog,user }) => {
+const Blog = ({ blog ,addLikes}) => {
   const [view,setView]=useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -19,7 +19,7 @@ const hideDetails = { display:view?'':'none'}
   const Displayer = () => {
     let currUser="SAURAV"; 
     if (blog.user==undefined) {
-      currUser=user
+      currUser=""
     }
     else {
     currUser= blog.user.name 
@@ -30,7 +30,10 @@ const hideDetails = { display:view?'':'none'}
     )
   }
 
-  const viewbtn = {display:view?'none':''}
+  const viewbtn = { display: view ? 'none' : '' }
+  const increaseLike = () => {
+   addLikes(blog)
+  }
   return (
   <div style={blogStyle}>
       
@@ -42,9 +45,12 @@ const hideDetails = { display:view?'':'none'}
         URL : {blog.url}
        <br />
         Likes : {blog.likes}
+      {/* Like button */}
+        <button onClick={increaseLike}>like</button>
         <br />
         <Displayer key={ Math.random()} />
         <br />
+        { blog.id}
       <button onClick={toggler}>hideDetails</button>
       </div>
   </div>  
