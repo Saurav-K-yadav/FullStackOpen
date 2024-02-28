@@ -7,7 +7,7 @@ const Togglable = (props) => {
     const toggleVisibility = () => {
       setVisible(!visible);
     };
-    console.log("HELLO FROM TOGGLABLE")
+    // console.log("HELLO FROM TOGGLABLE")
     return (
         <div>
             <div style={hideWhenVisible}>

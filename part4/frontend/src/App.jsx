@@ -57,14 +57,12 @@ const App = () => {
 
   const loginForm = () => {
     return (
-      <Togglable buttonLabel='login'>
         <LoginForm username={username}
           password={password}
           handlePasswordChange={({ target }) => { setPassword(target.value) }}
           handleUsernameChange={({ target }) => { setUsername(target.value) }}
           handleSubmit={handleLogin}
         />
-      </Togglable >
     );
   }
 
@@ -89,11 +87,11 @@ const App = () => {
    
  } 
 
-  const addBlog = (newBlog) => {
+  const addBlog = async (newBlog) => {
 
     try
     {
-      blogService.create(newBlog)
+      await blogService.create(newBlog)
       console.log(newBlog)
       setBlogs(blogs.concat(newBlog))
 
@@ -133,7 +131,7 @@ const App = () => {
           <div>{blogForm()}</div>
           <h2>Blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} user={ user.name} />
           ))}
         </div>
       )}
