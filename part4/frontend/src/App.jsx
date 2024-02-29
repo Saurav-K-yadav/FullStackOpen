@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect,useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import './App.css'
@@ -95,7 +95,7 @@ const App = () => {
       console.log(newBlog)
       newBlog = { ...newBlog,likes:0,user:user}
       setBlogs(blogs.concat(newBlog))
-
+      blogFormRef.current.toggleVisibility()
       setErrorMessage(`added ${newBlog.title}`);
       setTimeout(() => {
         setErrorMessage(null);
@@ -110,11 +110,11 @@ const App = () => {
     }
   } 
   
-
-
+  const blogFormRef = useRef()
+  
   const blogForm = () => {
     return (
-      <Togglable buttonLabel={"Add Note" }>
+      <Togglable buttonLabel={"Add Note"} ref={ blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
         
