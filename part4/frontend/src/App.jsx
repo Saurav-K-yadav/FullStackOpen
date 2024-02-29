@@ -110,6 +110,8 @@ const App = () => {
     }
   } 
   
+
+
   const blogForm = () => {
     return (
       <Togglable buttonLabel={"Add Note" }>
@@ -127,8 +129,7 @@ const App = () => {
       id: blog.id,
       likes:blog.likes+1
       }
-    // console.log(`Our Blog ${newBlog}`)
-    try {
+     try {
       await blogService.update(newBlog);
       let newValues=blogs.filter(blog=>blog.id!=newBlog.id)
       newValues=newValues.concat(newBlog)
@@ -147,6 +148,25 @@ const App = () => {
     }
   } 
   
+  const removeBlog = async (Blog)=>{ 
+    try {
+      await blogService.remove(Blog)
+      let newBlogs = blogs.filter(blog => blog.id != Blog.id)
+      setBlogs(newBlogs)
+    setErrorMessage(`Deleted '${Blog.title}'`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+    }
+    catch (error) {
+      setErrorMessage("Failed to remove item");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {errorMessage === null ? "" : errorMessage}
@@ -160,7 +180,7 @@ const App = () => {
           <div>{blogForm()}</div>
           <h2>Blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} addLikes={ addLikes} />
+            <Blog key={blog.id} blog={blog} addLikes={addLikes} removeBlog={removeBlog} />
           ))}
         </div>
       )}

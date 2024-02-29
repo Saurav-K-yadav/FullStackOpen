@@ -28,9 +28,27 @@ const update = async (newBlog) => {
   return request.data
 }
 
+const remove = async (newBlog) => {
+  const config = {
+    headers:{Authorization:token},
+  }
+  try {
+    console.log(`${baseUrl}/${newBlog.id}`,  config)
+  const request = await axios.delete(`${baseUrl}/${newBlog.id}`, config)
+  console.log('called the delete axios');
+  
+    return request.data
+  }
+  catch (error) {
+    console.log('ERROR CANT DELETE');
+    
+  }
+}
+
 export default {
   getAll,
   setToken,
   create,
-  update
+  update,
+  remove
 }

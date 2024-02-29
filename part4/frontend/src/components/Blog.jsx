@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog ,addLikes}) => {
+const Blog = ({ blog ,addLikes,removeBlog}) => {
   const [view,setView]=useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -34,6 +34,11 @@ const hideDetails = { display:view?'':'none'}
   const increaseLike = () => {
    addLikes(blog)
   }
+  const deleteItem = () => {
+   const confirm= window.confirm(`Delete '${blog.title}' ?`)
+    if(confirm)
+    {removeBlog(blog)}
+  }
   return (
   <div style={blogStyle}>
       
@@ -50,7 +55,8 @@ const hideDetails = { display:view?'':'none'}
         <br />
         <Displayer key={ Math.random()} />
         <br />
-        { blog.id}
+        <button onClick={deleteItem}>delete blog</button>
+        <br />
       <button onClick={toggler}>hideDetails</button>
       </div>
   </div>  
