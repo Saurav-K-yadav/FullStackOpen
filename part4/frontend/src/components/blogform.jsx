@@ -11,13 +11,18 @@ const BlogForm = ({ createBlog }) => {
       setUrl("");
       setAuthor('')
       console.log(author)
-      const newBlog = {
+      // const newBlog = {
+      //   title: title,
+      //   author: author,
+      //   url: url,
+      // };
+
+      // createBlog(newBlog)
+      createBlog({
         title: title,
         author: author,
         url: url,
-      };
-
-      createBlog(newBlog)
+      })
     }
 
   return (

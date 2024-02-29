@@ -40,26 +40,26 @@ const hideDetails = { display:view?'':'none'}
     {removeBlog(blog)}
   }
   return (
-  <div style={blogStyle}>
-      
-      {blog.title} {'   '}
-      <button onClick={toggler} style={viewbtn}>View Details</button>
-      <div style={hideDetails}>
+    <div style={blogStyle} className="displayedBlog">
+      {blog.title} {"   "}
+      <button onClick={toggler} style={viewbtn}>
+        View Details
+      </button>
+      <div style={hideDetails} className="view">
         Author : {blog.author}
         <br />
         URL : {blog.url}
-       <br />
+        <br />
         Likes : {blog.likes}
-      {/* Like button */}
         <button onClick={increaseLike}>like</button>
         <br />
-        <Displayer key={ Math.random()} />
+        <Displayer key={Math.random()} />
         <br />
         <button onClick={deleteItem}>delete blog</button>
         <br />
-      <button onClick={toggler}>hideDetails</button>
+        <button onClick={toggler}>hideDetails</button>
       </div>
-  </div>  
-)}
+    </div>
+  );}
 
 export default Blog
