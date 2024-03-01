@@ -1,12 +1,12 @@
 beforeEach(function () {
-  cy.request('POST', 'http://localhost:3001/api/testing/reset')
+  cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
   const user = {
     name: 'saurav',
     username: 'saurav',
     password: 'saurav'
   }
-  cy.request('POST', 'http://localhost:3001/api/users/', user)
-  cy.visit('http://localhost:5173')
+  cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+  cy.visit('')
 })
 
 describe('Note app', function () {
@@ -39,7 +39,7 @@ describe('Note app', function () {
 
 describe('when logged in', function () {
   beforeEach(function () {
-    cy.login({username:'saurav',password:'saurav'})
+    cy.login({ username: 'saurav', password: 'saurav' })
   })
 
   it('a new note can be created', function () {
@@ -49,20 +49,18 @@ describe('when logged in', function () {
     cy.contains('a note created by cypress')
 
   })
+  
 
 })
 
 describe('and a note exists', function () {
 
   beforeEach(function () {
-    cy.contains('login').click()
-    cy.get('#username').type('saurav')
-    cy.get('#password').type('saurav')
-    cy.get('#login-button').click()
-
-    cy.get('#toggles').click()
-    cy.get('#note-input').type('a note created by cypress')
-    cy.get('#save').click()
+    cy.login({ username: "saurav", password: "saurav" }) 
+    cy.createNote({
+      content: 'a note created by cypress',
+      important:true
+    })
   })
 
   it('it can be made not important', function () {
@@ -73,4 +71,28 @@ describe('and a note exists', function () {
     cy.contains('a note created by cypress')
       .contains('Mark Important')
   })
+})
+
+describe.only('and several notes exist', function () {
+  beforeEach(function () {
+    cy.login({ username: 'saurav', password: 'saurav' })
+    cy.createNote({ content: 'first note', important: false })
+    cy.createNote({ content: 'second note', important: false })
+    cy.createNote({ content: 'third note', important: false })
+  })
+
+  it('one of those can be made important', function () {
+    cy.contains('second note').parent().find('button').as('theButton')
+    cy.get('@theButton').click()
+    cy.get('@theButton').should('contain', 'Mark Not Important')
+    // cy.contains('second note').parent().find('button').contains('Mark Not Important')
+  })
+
+  it('then example', function () {
+    cy.get('button').then(buttons => {
+      console.log('number of buttons', buttons.length)
+      cy.wrap(buttons[0]).click()
+    })
+  })
+
 })
