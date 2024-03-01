@@ -9,7 +9,9 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "rm -rf dist && cd ../part2/exercises && npm run build && cp -r dist ../../part3",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:test": "NODE_ENV=test node index.js"
+
   },
   "author": "Saurav Kumar Yadav",
   "license": "ISC",
