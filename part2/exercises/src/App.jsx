@@ -125,10 +125,8 @@ noteFormRef.current.toggleVisibility()
   
   const noteForm = () => {
     return (
-      <Togglable buttonLabel="new note" ref={noteFormRef}>
-        <NoteForm
-          createNote={addNotes}
-        />
+      <Togglable buttonLabel="new" ref={noteFormRef}>
+        <NoteForm createNote={addNotes} />
       </Togglable>
     );
   }
