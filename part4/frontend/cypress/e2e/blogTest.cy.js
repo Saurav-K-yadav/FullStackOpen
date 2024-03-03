@@ -33,7 +33,7 @@ describe('Blog App', () => {
     })
   })
 
-  describe.only('when logged in', function () {
+  describe('when logged in', function () {
     beforeEach(function () {
       cy.get('#username').type('saurav')
       cy.get('#password').type('saurav')
@@ -48,5 +48,31 @@ describe('Blog App', () => {
       cy.get('#create').click()
       cy.get('html').contains('New Note')
     })
+  })
+
+  describe.only('when note is added', function () {
+    beforeEach(function () {
+      cy.get('#username').type('saurav')
+      cy.get('#password').type('saurav')
+      cy.get('#login').click()
+      cy.get('#Add').click()
+      cy.get('#title').type('New Note')
+      cy.get('#author').type('#saurav')
+      cy.get('#url').type('localhost')
+      cy.get('#create').click()
+    })
+    it('Notes can be liked', function () {
+      cy.get('#view').click()
+      cy.get('#like').click()
+      // cy.get('.view').contains('1')
+    })
+
+    // it('Notes are sorted', function () { 
+    //   cy.get('#Add').click()
+    //   cy.get('#title').type('New Note')
+    //   cy.get('#author').type('#saurav')
+    //   cy.get('#url').type('localhost')
+    //   cy.get('#create').click()
+    // })
   })
 })

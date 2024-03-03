@@ -13,7 +13,7 @@ const hideDetails = { display:view?'':'none'}
 
   const toggler = () => {
     setView(!view)
-    console.log(blog)
+    // console.log(blog)
   }
 
   const Displayer = () => {
@@ -32,6 +32,7 @@ const hideDetails = { display:view?'':'none'}
 
   const viewbtn = { display: view ? 'none' : '' }
   const increaseLike = () => {
+    console.log(blog.user)
    addLikes(blog)
   }
   const deleteItem = () => {
@@ -42,7 +43,7 @@ const hideDetails = { display:view?'':'none'}
   return (
     <div style={blogStyle} className="displayedBlog">
       {blog.title} {"   "}
-      <button onClick={toggler} style={viewbtn}>
+      <button onClick={toggler} style={viewbtn} id="view">
         View Details
       </button>
       <div style={hideDetails} className="view">
@@ -51,7 +52,7 @@ const hideDetails = { display:view?'':'none'}
         URL : {blog.url}
         <br />
         Likes : {blog.likes}
-        <button onClick={increaseLike}>like</button>
+        <button onClick={increaseLike} id="like">like</button>
         <br />
         <Displayer key={Math.random()} />
         <br />

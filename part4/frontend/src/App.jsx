@@ -133,7 +133,6 @@ const App = () => {
       await blogService.update(newBlog);
       let newValues=blogs.filter(blog=>blog.id!=newBlog.id)
       newValues=newValues.concat(newBlog)
-      // setBlogs(newValues.concat(newBlog));
        setBlogs(newValues.sort(function (a, b) {
          return b.likes - a.likes;
        }))
