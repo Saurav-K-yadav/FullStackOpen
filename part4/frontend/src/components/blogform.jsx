@@ -11,13 +11,6 @@ const BlogForm = ({ createBlog }) => {
       setUrl("");
       setAuthor('')
       console.log(author)
-      // const newBlog = {
-      //   title: title,
-      //   author: author,
-      //   url: url,
-      // };
-
-      // createBlog(newBlog)
       createBlog({
         title: title,
         author: author,
@@ -35,7 +28,7 @@ const BlogForm = ({ createBlog }) => {
           onChange={({ target }) => {
             setTitle(target.value);
           }}
-        />
+         id="title"/>
       </div>
       <div>
         Author
@@ -45,7 +38,7 @@ const BlogForm = ({ createBlog }) => {
           onChange={({ target }) => {
             setAuthor(target.value);
           }}
-        />
+        id="author"/>
       </div>
       <div>
         URL
@@ -55,9 +48,9 @@ const BlogForm = ({ createBlog }) => {
           onChange={({ target }) => {
             setUrl(target.value);
           }}
-        />
+        id="url"/>
       </div>
-      <button type="submit">create</button>
+      <button type="submit" id="create">create</button>
     </form>
   );
 };

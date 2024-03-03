@@ -25,7 +25,7 @@ describe('Blog App', () => {
       cy.contains('Sucessfully Logged In')
     })
 
-    it.only('Login fails with wrong credentials', function () {
+    it('Login fails with wrong credentials', function () {
       cy.get('#username').type('wrong username')
       cy.get('#password').type('wrong password')
       cy.get('#login').click()
@@ -33,4 +33,20 @@ describe('Blog App', () => {
     })
   })
 
+  describe.only('when logged in', function () {
+    beforeEach(function () {
+      cy.get('#username').type('saurav')
+      cy.get('#password').type('saurav')
+      cy.get('#login').click()
+    })
+
+    it('New note can be added', function () {
+      cy.get('#Add').click()
+      cy.get('#title').type('New Note')
+      cy.get('#author').type('#saurav')
+      cy.get('#url').type('localhost')
+      cy.get('#create').click()
+      cy.get('html').contains('New Note')
+    })
+  })
 })
