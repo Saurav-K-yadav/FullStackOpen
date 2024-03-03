@@ -10,5 +10,10 @@ describe('Blog App', () => {
     cy.visit('http://localhost:5173')
   })
 
+  it('login form is shown', () => {
+    cy.contains('Login')
+    cy.contains('Username')
+    cy.contains('Password')
 
+  })
 })
