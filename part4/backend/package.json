@@ -7,7 +7,9 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "temp": "nodemon test.js"
+    "temp": "nodemon test.js",
+    "start:test": "NODE_ENV=test node index.js"
+
   },
   "author": "Saurav Kumar Yadav",
   "license": "ISC",
