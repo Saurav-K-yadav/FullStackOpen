@@ -81,7 +81,7 @@ const App = () => {
   const logOutForm = () => {
     return (
       <div>
-        <button onClick={handleLogOut}>Logout</button>
+        <button onClick={handleLogOut} id='logout'>Logout</button>
     </div>
   );
    

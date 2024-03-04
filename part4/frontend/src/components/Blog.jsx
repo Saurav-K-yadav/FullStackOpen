@@ -56,7 +56,7 @@ const hideDetails = { display:view?'':'none'}
         <br />
         <Displayer key={Math.random()} />
         <br />
-        <button onClick={deleteItem}>delete blog</button>
+        <button onClick={deleteItem} id="delete">delete blog</button>
         <br />
         <button onClick={toggler}>hideDetails</button>
       </div>
