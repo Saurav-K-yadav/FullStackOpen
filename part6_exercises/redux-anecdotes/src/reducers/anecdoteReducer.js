@@ -28,6 +28,18 @@ export const addVote = (id) => {
   }
 }
 
+export const newAnec = (event) => { 
+  const content = event.target.newAnec.value
+  return {
+    type:"NEW_ANECDOTE",
+    payload: {
+    content,
+    id: getId(),
+    votes:0
+  }}
+}
+
+
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
@@ -39,8 +51,12 @@ const reducer = (state = initialState, action) => {
       
       return state.map(anc=>anc.id===id?newanc:anc)
     }
+    case "NEW_ANECDOTE": {
+      return [...state,action.payload]
+    }    
     default :
-      return state}
+      return state
+  }
     
   
 }
