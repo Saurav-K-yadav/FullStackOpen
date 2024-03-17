@@ -41,21 +41,31 @@ export const newAnec = (event) => {
 
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch (action.type){
+  // console.log('state now: ', state)
+  // console.log('action', action)
+  switch (action.type) {
+    
     case "ADD_VOTE":{
       const id=action.payload.id
       const incVote = state.find(note => note.id === id)
       const newanc = { ...incVote, votes: incVote.votes + 1 }
       
-      return state.map(anc=>anc.id===id?newanc:anc)
+      const newState = Object.values(state.map(anc => anc.id === id ? newanc : anc))
+      newState.sort((a, b) => b.votes - a.votes) 
+      return newState
+        
     }
+      
     case "NEW_ANECDOTE": {
       return [...state,action.payload]
     }    
+      
     default :
-      return state
+      {
+        const newArr = Object.values(state)
+       newArr.sort((a,b)=>b.votes-a.votes) 
+        return newArr
+      }
   }
     
   
