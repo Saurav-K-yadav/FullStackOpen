@@ -40,7 +40,7 @@ export const newAnec = (event) => {
 }
 
 
-const reducer = (state = initialState, action) => {
+const Anecreducer = (state = initialState, action) => {
   // console.log('state now: ', state)
   // console.log('action', action)
   switch (action.type) {
@@ -71,4 +71,4 @@ const reducer = (state = initialState, action) => {
   
 }
 
-export default reducer
+export default Anecreducer
