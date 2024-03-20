@@ -1,9 +1,8 @@
-const filter = (state = '', action)=>{ 
+
+const filter = (state = '', action) => { 
     switch (action.type) {
         case 'FIND':
             { 
-                // console.log(action);
-                
                 return action.payload
             }
         default:
@@ -20,5 +19,4 @@ export const filterchange = (value) => {
         
     }
 }
-
 export default filter
