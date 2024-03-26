@@ -25,7 +25,7 @@ const Notes = () => {
     <ul>
       {notes.map((note) => (
         <Note
-          key={note.id}
+          key={Math.random()}
           note={note}
           handleClick={() => dispatch(toggleImportanceOf(note.id))}
         />
