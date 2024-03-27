@@ -23,11 +23,12 @@ export const createNotification = (notification) => {
     }
 }
 
-export const clearNotification = () => {
+ export const clearNotification = () => {
     return {
         type: 'CLEAR_NOTIFICATION'
     };
 };
 
 
-export default notificationReducer; 
+
+export default notificationReducer;
