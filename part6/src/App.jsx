@@ -4,20 +4,19 @@ import VisibilityFilter from "./components/VisibilityFilter";
 
 import { useEffect } from "react";
 import notesService from './services/notes'
-import { setNotes } from "./reducers/noteReducer";
+import { setNotes,inintializeNotes } from "./reducers/noteReducer";
 import { useDispatch } from "react-redux";
 
 const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
-    notesService.getAll().then(notes=>dispatch(setNotes(notes)))
+    dispatch(inintializeNotes())
   },[])
 
   return (
     <div>
       <NewNote />
     <VisibilityFilter/>
-
       <Notes />
     </div>
   );
