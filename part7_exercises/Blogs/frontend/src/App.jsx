@@ -1,66 +1,72 @@
-import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
-import './App.css'
-import loginService from './services/login'
-import LoginForm from './components/Login'
-import Togglable from './components/Togglable'
-import BlogForm from './components/blogform'
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createNotification, clearNotification } from './reducers/notification';
+
+import './App.css';
+import blogService from './services/blogs';
+import loginService from './services/login';
+import LoginForm from './components/Login';
+import Blog from './components/Blog';
+import Togglable from './components/Togglable';
+import BlogForm from './components/blogform';
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [blogs, setBlogs] = useState([]);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null);
+    const dispatch = useDispatch();
+    const { message, display } = useSelector((state) => state.notification);
+
+    // For Notification
+    useEffect(() => {
+        const time = setTimeout(() => {
+            dispatch(clearNotification());
+        }, 5000);
+        return () => clearTimeout(time);
+    }, [message, dispatch]);
 
     useEffect(() => {
         blogService.getAll().then((blogs) =>
             setBlogs(
                 blogs.sort(function (a, b) {
-                    return b.likes - a.likes
+                    return b.likes - a.likes;
                 })
             )
-        )
-    }, [])
+        );
+    }, []);
 
     useEffect(() => {
-        const loggedUser = window.localStorage.getItem('loggedBlogUser')
+        const loggedUser = window.localStorage.getItem('loggedBlogUser');
         if (loggedUser) {
-            const tobeSet = JSON.parse(loggedUser)
-            setUser(tobeSet)
-            blogService.setToken(tobeSet.token)
+            const tobeSet = JSON.parse(loggedUser);
+            setUser(tobeSet);
+            blogService.setToken(tobeSet.token);
         }
-    }, [])
+    }, []);
 
     const handleLogin = async (event) => {
-        event.preventDefault()
-        console.log('Logging', username, password)
+        event.preventDefault();
+        console.log('Logging', username, password);
         try {
             const currUser = await loginService.login({
                 username,
                 password,
-            })
+            });
             window.localStorage.setItem(
                 'loggedBlogUser',
                 JSON.stringify(currUser)
-            )
-            blogService.setToken(currUser.token)
+            );
+            blogService.setToken(currUser.token);
 
-            setUser(currUser)
-            setUsername('')
-            setPassword('')
-            setErrorMessage('Sucessfully Logged In')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
+            setUser(currUser);
+            setUsername('');
+            setPassword('');
+            dispatch(createNotification(`Hello ${currUser.username}`));
         } catch (error) {
-            setErrorMessage('Invalid Credentials')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
+            dispatch(createNotification('Invalid Credentials'));
         }
-    }
+    };
 
     const loginForm = () => {
         return (
@@ -68,27 +74,23 @@ const App = () => {
                 username={username}
                 password={password}
                 handlePasswordChange={({ target }) => {
-                    setPassword(target.value)
+                    setPassword(target.value);
                 }}
                 handleUsernameChange={({ target }) => {
-                    setUsername(target.value)
+                    setUsername(target.value);
                 }}
                 handleSubmit={handleLogin}
             />
-        )
-    }
+        );
+    };
 
     const handleLogOut = () => {
-        window.localStorage.removeItem('loggedBlogUser')
-        setUser('')
-        blogService.setToken(null)
-        window.location.reload()
-        setErrorMessage('Logged Out')
-
-        setTimeout(() => {
-            setErrorMessage(null)
-        }, 5000)
-    }
+        window.localStorage.removeItem('loggedBlogUser');
+        setUser('');
+        blogService.setToken(null);
+        window.location.reload();
+        dispatch(createNotification(`LOGGED OUT. Have a Good Day`));
+    };
 
     const logOutForm = () => {
         return (
@@ -97,38 +99,32 @@ const App = () => {
                     Logout
                 </button>
             </div>
-        )
-    }
+        );
+    };
 
     const addBlog = async (newBlog) => {
         try {
-            await blogService.create(newBlog)
-            console.log(newBlog)
-            newBlog = { ...newBlog, likes: 0, user: user }
-            setBlogs(blogs.concat(newBlog))
-            blogFormRef.current.toggleVisibility()
-            setErrorMessage(`added ${newBlog.title}`)
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
+            await blogService.create(newBlog);
+            console.log(newBlog);
+            newBlog = { ...newBlog, likes: 0, user: user };
+            setBlogs(blogs.concat(newBlog));
+            blogFormRef.current.toggleVisibility();
+            dispatch(createNotification(`added ${newBlog.title}`));
         } catch (error) {
-            setErrorMessage('operation failed')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
-            console.log(error)
+            dispatch(createNotification(`Some Error Occured `));
+            console.log(error);
         }
-    }
+    };
 
-    const blogFormRef = useRef()
+    const blogFormRef = useRef();
 
     const blogForm = () => {
         return (
             <Togglable buttonLabel={'Add Note'} ref={blogFormRef}>
                 <BlogForm createBlog={addBlog} />
             </Togglable>
-        )
-    }
+        );
+    };
 
     const addLikes = async (blog) => {
         const newBlog = {
@@ -137,47 +133,37 @@ const App = () => {
             url: blog.url,
             id: blog.id,
             likes: blog.likes + 1,
-        }
+        };
         try {
-            await blogService.update(newBlog)
-            let newValues = blogs.filter((blog) => blog.id != newBlog.id)
-            newValues = newValues.concat(newBlog)
+            await blogService.update(newBlog);
+            let newValues = blogs.filter((blog) => blog.id != newBlog.id);
+            newValues = newValues.concat(newBlog);
             setBlogs(
                 newValues.sort(function (a, b) {
-                    return b.likes - a.likes
+                    return b.likes - a.likes;
                 })
-            )
+            );
         } catch (error) {
-            setErrorMessage('operation failed')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
-            console.log(error)
+            dispatch(createNotification(`Some Error Occured `));
+            console.log(error);
         }
-    }
+    };
 
     const removeBlog = async (Blog) => {
         try {
-            await blogService.remove(Blog)
-            let newBlogs = blogs.filter((blog) => blog.id != Blog.id)
-            setBlogs(newBlogs)
-            setErrorMessage(`Deleted '${Blog.title}'`)
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
+            await blogService.remove(Blog);
+            let newBlogs = blogs.filter((blog) => blog.id != Blog.id);
+            setBlogs(newBlogs);
+            dispatch(createNotification(`Deleted '${Blog.title}'`));
         } catch (error) {
-            setErrorMessage('Failed to remove item')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
-            console.log(error)
+            dispatch(createNotification('Failed to remove item'));
+            console.log(error);
         }
-    }
+    };
 
     return (
         <div>
-            {errorMessage === null ? '' : errorMessage}
-
+            {display ? message : ''}
             {user === null ? (
                 loginForm()
             ) : (
@@ -196,7 +182,7 @@ const App = () => {
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;
