@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNotification, clearNotification } from './reducers/notification';
-import { createBlog, initializeBlogs } from './reducers/Blogs';
+import { createBlog, initializeBlogs,setLiked,deleteBlog } from './reducers/Blogs';
 
 import './App.css';
 import blogService from './services/blogs';
@@ -12,7 +12,6 @@ import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
 
 const App = () => {
-    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
@@ -101,11 +100,9 @@ const App = () => {
 
     const addBlog = async (newBlog) => {
         try {
-            // await blogService.create(newBlog);
             console.log(newBlog);
             newBlog = { ...newBlog, likes: 0, user: user };
             dispatch(createBlog(newBlog))
-            // setBlogs(blogs.concat(newBlog));
             blogFormRef.current.toggleVisibility();
             dispatch(createNotification(`added ${newBlog.title}`));
         } catch (error) {
@@ -133,14 +130,7 @@ const App = () => {
             likes: blog.likes + 1,
         };
         try {
-            await blogService.update(newBlog);
-            let newValues = blogs.filter((blog) => blog.id != newBlog.id);
-            newValues = newValues.concat(newBlog);
-            setBlogs(
-                newValues.sort(function (a, b) {
-                    return b.likes - a.likes;
-                })
-            );
+            dispatch(setLiked(newBlog))
         } catch (error) {
             dispatch(createNotification(`Some Error Occured `));
             console.log(error);
@@ -149,9 +139,7 @@ const App = () => {
 
     const removeBlog = async (Blog) => {
         try {
-            await blogService.remove(Blog);
-            let newBlogs = blogs.filter((blog) => blog.id != Blog.id);
-            setBlogs(newBlogs);
+            dispatch(deleteBlog(Blog))
             dispatch(createNotification(`Deleted '${Blog.title}'`));
         } catch (error) {
             dispatch(createNotification('Failed to remove item'));
