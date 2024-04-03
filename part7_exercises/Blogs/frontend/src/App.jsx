@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNotification, clearNotification } from './reducers/notification';
+import { createBlog, initializeBlogs } from './reducers/Blogs';
 
 import './App.css';
 import blogService from './services/blogs';
@@ -11,12 +12,13 @@ import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
-    const dispatch = useDispatch();
+    const blogs=useSelector((state)=>state.blogs)
     const { message, display } = useSelector((state) => state.notification);
+    const dispatch = useDispatch();
 
     // For Notification
     useEffect(() => {
@@ -26,15 +28,10 @@ const App = () => {
         return () => clearTimeout(time);
     }, [message, dispatch]);
 
+    // For fetching blogs at start
     useEffect(() => {
-        blogService.getAll().then((blogs) =>
-            setBlogs(
-                blogs.sort(function (a, b) {
-                    return b.likes - a.likes;
-                })
-            )
-        );
-    }, []);
+        dispatch(initializeBlogs())
+    }, [dispatch]);
 
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedBlogUser');
@@ -104,10 +101,11 @@ const App = () => {
 
     const addBlog = async (newBlog) => {
         try {
-            await blogService.create(newBlog);
+            // await blogService.create(newBlog);
             console.log(newBlog);
             newBlog = { ...newBlog, likes: 0, user: user };
-            setBlogs(blogs.concat(newBlog));
+            dispatch(createBlog(newBlog))
+            // setBlogs(blogs.concat(newBlog));
             blogFormRef.current.toggleVisibility();
             dispatch(createNotification(`added ${newBlog.title}`));
         } catch (error) {
