@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNotification, clearNotification } from './reducers/notification';
 import { createBlog, initializeBlogs,setLiked,deleteBlog } from './reducers/Blogs';
+import {newUser,deleteUser,retriveUserDetails } from './reducers/user'
 
 import './App.css';
 import blogService from './services/blogs';
@@ -14,8 +15,9 @@ import BlogForm from './components/blogform';
 const App = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null);
-    const blogs=useSelector((state)=>state.blogs)
+    
+    const user = useSelector((state) => state.user)
+    const blogs = useSelector((state) => state.blogs)
     const { message, display } = useSelector((state) => state.notification);
     const dispatch = useDispatch();
 
@@ -35,30 +37,21 @@ const App = () => {
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedBlogUser');
         if (loggedUser) {
-            const tobeSet = JSON.parse(loggedUser);
-            setUser(tobeSet);
-            blogService.setToken(tobeSet.token);
+            dispatch(retriveUserDetails(loggedUser));
         }
     }, []);
 
     const handleLogin = async (event) => {
         event.preventDefault();
         console.log('Logging', username, password);
+        const logger = username
+        const code=password
         try {
-            const currUser = await loginService.login({
-                username,
-                password,
-            });
-            window.localStorage.setItem(
-                'loggedBlogUser',
-                JSON.stringify(currUser)
-            );
-            blogService.setToken(currUser.token);
-
-            setUser(currUser);
+            dispatch(newUser(logger,code))
+            // console.log(user)
             setUsername('');
             setPassword('');
-            dispatch(createNotification(`Hello ${currUser.username}`));
+            dispatch(createNotification(`Hello ${username}`));
         } catch (error) {
             dispatch(createNotification('Invalid Credentials'));
         }
@@ -81,10 +74,7 @@ const App = () => {
     };
 
     const handleLogOut = () => {
-        window.localStorage.removeItem('loggedBlogUser');
-        setUser('');
-        blogService.setToken(null);
-        window.location.reload();
+        dispatch(deleteUser())
         dispatch(createNotification(`LOGGED OUT. Have a Good Day`));
     };
 
@@ -150,11 +140,11 @@ const App = () => {
     return (
         <div>
             {display ? message : ''}
-            {user === null ? (
+             {user.username === "" ? ( 
                 loginForm()
-            ) : (
+            ) : ( 
                 <div>
-                    <p>{user.name} logged-in</p> <div> {logOutForm()}</div>
+                    <p>{user.username} logged-in</p> <div> {logOutForm()}</div>
                     <div>{blogForm()}</div>
                     <h2>Blogs</h2>
                     {blogs.map((blog) => (
@@ -166,7 +156,7 @@ const App = () => {
                         />
                     ))}
                 </div>
-            )}
+             )} 
         </div>
     );
 };
