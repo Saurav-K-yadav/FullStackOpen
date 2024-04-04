@@ -67,6 +67,8 @@ const Blogs = () => {
             removeBlog(blog);
         }
     };
+    const comments=blog.comments
+    console.log(blog.comments)
     return (
         <div>
             <h2>{blog.title}</h2>
@@ -82,6 +84,11 @@ const Blogs = () => {
             <br />
             <Displayer key={Math.random()} />
             <br />
+            <h2> Comments:</h2>{
+                comments.map(comment => (
+                <li key={Math.random()}>{comment}</li>
+                ))
+            }
             <button onClick={deleteItem} id="delete">
                 delete blog
             </button>
