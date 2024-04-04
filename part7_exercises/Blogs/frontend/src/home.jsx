@@ -14,7 +14,6 @@ import {
     Paper,
 } from '@mui/material';
 
-import './App.css';
 import LoginForm from './components/Login';
 import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
