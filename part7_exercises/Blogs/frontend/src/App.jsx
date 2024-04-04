@@ -3,7 +3,7 @@ import Home from './home';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import UsersDisplay from './components/users';
 import { Container } from '@mui/material';
-
+import UserId from './components/UserId'
 const App = () => {
     const padding = {
         padding: 5,
@@ -23,6 +23,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/users" element={<UsersDisplay />} />
+                    <Route path="/users/:id" element={<UserId />} />
                 </Routes>
             </Router>
         </Container>

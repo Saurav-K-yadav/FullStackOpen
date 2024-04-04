@@ -1,10 +1,9 @@
-import axios from 'axios';
-import userService from '../services/users';
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { initializeusers } from '../reducers/allUser';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
-    Container,
     Table,
     TableHead,
     TableBody,
@@ -15,17 +14,12 @@ import {
 } from '@mui/material';
 
 const UsersDisplay = () => {
-    useEffect(() => {
-        const fetch = async () => {
-            const response = await userService.getAllUsers();
-            console.log(response);
-            setAllusers(response);
-            console.log(allUsers);
-        };
-        fetch();
-    }, []);
+    const allUsers = useSelector((state) => state.allUser);
+    const dispatch = useDispatch();
 
-    const [allUsers, setAllusers] = useState([]);
+    useEffect(() => {
+        dispatch(initializeusers());
+    }, [dispatch]);
 
     return (
         <div>
