@@ -10,16 +10,6 @@ import blogService from '../services/blogs';
 const Blogs = () => {
     const [newComment, setNewComment] = useState('');
 
-    const Displayer = () => {
-        let currUser = 'SAURAV';
-        if (blog.user == undefined) {
-            currUser = '';
-        } else {
-            currUser = blog.user.name;
-        }
-        return <div>Added by : {currUser}</div>;
-    };
-
     const addLikes = async (blog) => {
         const newBlog = {
             title: blog.title,
@@ -64,6 +54,8 @@ const Blogs = () => {
     const increaseLike = () => {
         console.log(blog.user);
         addLikes(blog);
+        dispatch(initializeBlogs());
+
     };
     const deleteItem = () => {
         const confirm = window.confirm(`Delete '${blog.title}' ?`);
@@ -72,7 +64,6 @@ const Blogs = () => {
         }
     };
     const comments = blog.comments;
-    // console.log(blog.comments)
 
     const addComment = async () => {
         if (newComment === '') {
@@ -100,7 +91,7 @@ const Blogs = () => {
                 like
             </button>
             <br />
-            <Displayer key={Math.random()} />
+            {blog.user.name ? <>Added by :{blog.user.name}</> : ''}
             <br />
             <h2> Comments:</h2>
             <form
@@ -115,7 +106,7 @@ const Blogs = () => {
                     onChange={({ target }) => {
                         setNewComment(target.value);
                     }}
-                    placeholder='comments'
+                    placeholder="comments"
                     value={newComment}
                 />
                 <button type="submit">create</button>
