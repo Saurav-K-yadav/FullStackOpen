@@ -1,12 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNotification, clearNotification } from './reducers/notification';
-import {
-    createBlog,
-    initializeBlogs,
-    setLiked,
-    deleteBlog,
-} from './reducers/Blogs';
+import { createBlog, initializeBlogs } from './reducers/Blogs';
 import { newUser, deleteUser, retriveUserDetails } from './reducers/user';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +18,6 @@ import './App.css';
 import LoginForm from './components/Login';
 import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
-import Blog from './components/Blog';
 
 const Home = () => {
     const [username, setUsername] = useState('');
@@ -61,7 +55,6 @@ const Home = () => {
         const code = password;
         try {
             dispatch(newUser(logger, code));
-            // console.log(user)
             setUsername('');
             setPassword('');
             dispatch(createNotification(`Hello ${username}`));
@@ -122,32 +115,6 @@ const Home = () => {
                 <BlogForm createBlog={addBlog} />
             </Togglable>
         );
-    };
-
-    const addLikes = async (blog) => {
-        const newBlog = {
-            title: blog.title,
-            author: blog.author,
-            url: blog.url,
-            id: blog.id,
-            likes: blog.likes + 1,
-        };
-        try {
-            dispatch(setLiked(newBlog));
-        } catch (error) {
-            dispatch(createNotification(`Some Error Occured `));
-            console.log(error);
-        }
-    };
-
-    const removeBlog = async (Blog) => {
-        try {
-            dispatch(deleteBlog(Blog));
-            dispatch(createNotification(`Deleted '${Blog.title}'`));
-        } catch (error) {
-            dispatch(createNotification('Failed to remove item'));
-            console.log(error);
-        }
     };
 
     return (
