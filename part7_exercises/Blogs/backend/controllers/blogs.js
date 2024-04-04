@@ -80,10 +80,12 @@ blogsRouter.put('/:id', async (request, response, next) => {
    
     const original = await Blog.findById(request.params.id)
     let updatedComment=[...original.comments,body.comments]
-    if (body.comments === "") {
+    if (body.comments === "" ) {
         updatedComment=[...original.comments]
     }
-    
+    if (body.comments == null) {
+        updatedComment = [...original.comments]
+    }
     const blog = {
         title: body.title,
         author: body.author,

@@ -43,7 +43,19 @@ const remove = async (newBlog) => {
   }
 };
 
+const addcomment = async (newBlog) => {
+  try {
+    console.log(newBlog);    
+    const request = await axios.put(`${baseUrl}/${newBlog.id}`,newBlog);
+    return request.data
+  }
+  catch (error) {
+    console.log(error);
+    
+  }
+}
 export default {
+  addcomment,
   getAll,
   setToken,
   create,

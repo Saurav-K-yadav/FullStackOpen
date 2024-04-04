@@ -4,8 +4,12 @@ import { initializeBlogs, setLiked, deleteBlog } from '../reducers/Blogs';
 import { useParams } from 'react-router-dom';
 import { createNotification } from '../reducers/notification';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import blogService from '../services/blogs';
 
 const Blogs = () => {
+    const [newComment, setNewComment] = useState('');
+
     const Displayer = () => {
         let currUser = 'SAURAV';
         if (blog.user == undefined) {
@@ -31,12 +35,12 @@ const Blogs = () => {
             console.log(error);
         }
     };
-    const navigate=useNavigate()
+    const navigate = useNavigate();
     const removeBlog = async (Blog) => {
         try {
             dispatch(deleteBlog(Blog));
             dispatch(createNotification(`Deleted '${Blog.title}'`));
-            navigate('/')
+            navigate('/');
         } catch (error) {
             dispatch(createNotification('Failed to remove item'));
             console.log(error);
@@ -67,8 +71,22 @@ const Blogs = () => {
             removeBlog(blog);
         }
     };
-    const comments=blog.comments
-    console.log(blog.comments)
+    const comments = blog.comments;
+    // console.log(blog.comments)
+
+    const addComment = async () => {
+        if (newComment === '') {
+            return;
+        }
+        try {
+            const { comments, ...newBlog } = blog;
+            await blogService.addcomment({ ...newBlog, comments: newComment });
+            setNewComment('')
+            dispatch(initializeBlogs());
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div>
             <h2>{blog.title}</h2>
@@ -84,11 +102,27 @@ const Blogs = () => {
             <br />
             <Displayer key={Math.random()} />
             <br />
-            <h2> Comments:</h2>{
-                comments.map(comment => (
+            <h2> Comments:</h2>
+            <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    addComment();
+                }}
+            >
+                <input
+                    type="text"
+                    name="url"
+                    onChange={({ target }) => {
+                        setNewComment(target.value);
+                    }}
+                    placeholder='comments'
+                    value={newComment}
+                />
+                <button type="submit">create</button>
+            </form>
+            {comments.map((comment) => (
                 <li key={Math.random()}>{comment}</li>
-                ))
-            }
+            ))}
             <button onClick={deleteItem} id="delete">
                 delete blog
             </button>
