@@ -8,12 +8,22 @@ import {
     deleteBlog,
 } from './reducers/Blogs';
 import { newUser, deleteUser, retriveUserDetails } from './reducers/user';
+import { Link } from 'react-router-dom';
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Paper,
+} from '@mui/material';
 
 import './App.css';
 import LoginForm from './components/Login';
-import Blog from './components/Blog';
 import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
+import Blog from './components/Blog';
 
 const Home = () => {
     const [username, setUsername] = useState('');
@@ -150,14 +160,21 @@ const Home = () => {
                     <p>{user.username} logged-in</p> <div> {logOutForm()}</div>
                     <div>{blogForm()}</div>
                     <h2>Blogs</h2>
-                    {blogs.map((blog) => (
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            addLikes={addLikes}
-                            removeBlog={removeBlog}
-                        />
-                    ))}
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableBody>
+                                {blogs.map((blog) => (
+                                    <TableRow key={blog.id}>
+                                        <TableCell>
+                                            <Link to={`/blogs/${blog.id}`}>
+                                                {blog.title}
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
             )}
         </div>
