@@ -7,12 +7,16 @@ import { Link } from 'react-router-dom';
 
 import {
     Table,
+    TableHead,
     TableBody,
     TableCell,
     TableContainer,
     TableRow,
     Paper,
 } from '@mui/material';
+import { tableCellClasses } from '@mui/material/TableCell';
+
+import { styled } from '@mui/material/styles';
 
 import LoginForm from './components/Login';
 import Togglable from './components/Togglable';
@@ -116,6 +120,25 @@ const Home = () => {
         );
     };
 
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+        [`&.${tableCellClasses.head}`]: {
+            backgroundColor: theme.palette.common.black,
+            color: theme.palette.common.white,
+        },
+        [`&.${tableCellClasses.body}`]: {
+            fontSize: 14,
+        },
+    }));
+
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+        '&:last-child td, &:last-child th': {
+            border: 0,
+        },
+    }));
+
     return (
         <div>
             {display ? message : ''}
@@ -125,18 +148,25 @@ const Home = () => {
                 <div>
                     <p>{user.username} logged-in</p> <div> {logOutForm()}</div>
                     <div>{blogForm()}</div>
-                    <h2>Blogs</h2>
-                    <TableContainer component={Paper}>
-                        <Table>
+                        <TableContainer className='m-5' component={Paper}>
+                        <Table stickyHeader aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center" >
+                                        <h3>BLOGS</h3>
+                                    </StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+
                             <TableBody>
                                 {blogs.map((blog) => (
-                                    <TableRow key={blog.id}>
-                                        <TableCell>
+                                    <StyledTableRow hover key={blog.id}>
+                                        <StyledTableCell>
                                             <Link to={`/blogs/${blog.id}`}>
                                                 {blog.title}
                                             </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
                                 ))}
                             </TableBody>
                         </Table>
