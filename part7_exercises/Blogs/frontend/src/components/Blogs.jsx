@@ -6,6 +6,7 @@ import { createNotification } from '../reducers/notification';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import blogService from '../services/blogs';
+import '../css/blog.css';
 
 const Blogs = () => {
     const [newComment, setNewComment] = useState('');
@@ -55,7 +56,6 @@ const Blogs = () => {
         console.log(blog.user);
         addLikes(blog);
         dispatch(initializeBlogs());
-
     };
     const deleteItem = () => {
         const confirm = window.confirm(`Delete '${blog.title}' ?`);
@@ -72,52 +72,104 @@ const Blogs = () => {
         try {
             const { comments, ...newBlog } = blog;
             await blogService.addcomment({ ...newBlog, comments: newComment });
-            setNewComment('')
+            setNewComment('');
             dispatch(initializeBlogs());
         } catch (error) {
             console.log(error);
         }
     };
+
     return (
-        <div>
-            <h2>{blog.title}</h2>
+        // <div>
+        //     <h2>{blog.title}</h2>
+        //     <br />
+        //     Author : {blog.author}
+        //     <br />
+        //     URL : {blog.url}
+        //     <br />
+        //     Likes : {blog.likes}
+        //     <button onClick={increaseLike} id="like">
+        //         like
+        //     </button>
+        //     <br />
+        //     {blog.user.name ? <>Added by :{blog.user.name}</> : ''}
+        //     <br />
+        //     <h2> Comments:</h2>
+        //     <form
+        //         onSubmit={(event) => {
+        //             event.preventDefault();
+        //             addComment();
+        //         }}
+        //     >
+        //         <input
+        //             type="text"
+        //             name="url"
+        //             onChange={({ target }) => {
+        //                 setNewComment(target.value);
+        //             }}
+        //             placeholder="comments"
+        //             value={newComment}
+        //         />
+        //         <button type="submit">create</button>
+        //     </form>
+        //     {comments.map((comment) => (
+        //         <li key={Math.random()}>{comment}</li>
+        //     ))}
+        //     <button onClick={deleteItem} id="delete">
+        //         delete blog
+        //     </button>
+        //     <br />
+        // </div>
+
+        <div className="blog-post">
+            <h1 className="blog-title">{blog.title}</h1>
+            <div className="blog-content">URL : {blog.url}</div>
             <br />
-            Author : {blog.author}
-            <br />
-            URL : {blog.url}
-            <br />
-            Likes : {blog.likes}
-            <button onClick={increaseLike} id="like">
-                like
-            </button>
-            <br />
-            {blog.user.name ? <>Added by :{blog.user.name}</> : ''}
-            <br />
-            <h2> Comments:</h2>
-            <form
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    addComment();
-                }}
-            >
-                <input
-                    type="text"
-                    name="url"
-                    onChange={({ target }) => {
-                        setNewComment(target.value);
-                    }}
-                    placeholder="comments"
-                    value={newComment}
-                />
-                <button type="submit">create</button>
-            </form>
-            {comments.map((comment) => (
-                <li key={Math.random()}>{comment}</li>
-            ))}
-            <button onClick={deleteItem} id="delete">
-                delete blog
-            </button>
-            <br />
+            <div className="blog-meta">
+                <span className="blog-author">By: {blog.author}</span>
+                <span className="blog-date">
+                    <button onClick={increaseLike} id="like">
+                        Likes:
+                    </button>{' '}
+                    {blog.likes}
+                </span>
+                <br />
+
+                <div className="comments-section">
+                    <h2>Comments:</h2>
+                    <form
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            addComment();
+                        }}
+                    >
+                        <input
+                            type="text"
+                            name="url"
+                            onChange={({ target }) => {
+                                setNewComment(target.value);
+                            }}
+                            placeholder="Enter your comment"
+                            value={newComment}
+                            className="comment-input"
+                        />
+                        <button type="submit" className="comment-submit">
+                            Create
+                        </button>
+                    </form><br/>
+                    <ul className="comment-list">
+                        {comments.map((comment, index) => (
+                            <div key={index} className="comment">
+                                <span className="comment-text">{comment}</span>
+                            </div>
+                        ))}
+                    </ul>
+                    <button onClick={deleteItem} className="comment-submit">
+                        Delete Blog
+                    </button>
+                </div>
+
+            </div>
         </div>
     );
 };
