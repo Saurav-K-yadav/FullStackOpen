@@ -21,6 +21,7 @@ import { styled } from '@mui/material/styles';
 import LoginForm from './components/Login';
 import Togglable from './components/Togglable';
 import BlogForm from './components/blogform';
+import { blue, red } from '@mui/material/colors';
 
 const Home = () => {
     const [username, setUsername] = useState('');
@@ -146,13 +147,15 @@ const Home = () => {
                 loginForm()
             ) : (
                 <div>
-                    <p>{user.username} logged-in</p> <div> {logOutForm()}</div>
+                    <div>
+                        {user.username} logged-in{logOutForm()}
+                    </div>
                     <div>{blogForm()}</div>
-                        <TableContainer className='m-5' component={Paper}>
+                    <TableContainer className="m-5" component={Paper}>
                         <Table stickyHeader aria-label="customized table">
                             <TableHead>
                                 <TableRow>
-                                    <StyledTableCell align="center" >
+                                    <StyledTableCell align="center">
                                         <h3>BLOGS</h3>
                                     </StyledTableCell>
                                 </TableRow>

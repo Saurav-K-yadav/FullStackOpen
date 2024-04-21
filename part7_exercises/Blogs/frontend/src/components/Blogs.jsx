@@ -80,47 +80,6 @@ const Blogs = () => {
     };
 
     return (
-        // <div>
-        //     <h2>{blog.title}</h2>
-        //     <br />
-        //     Author : {blog.author}
-        //     <br />
-        //     URL : {blog.url}
-        //     <br />
-        //     Likes : {blog.likes}
-        //     <button onClick={increaseLike} id="like">
-        //         like
-        //     </button>
-        //     <br />
-        //     {blog.user.name ? <>Added by :{blog.user.name}</> : ''}
-        //     <br />
-        //     <h2> Comments:</h2>
-        //     <form
-        //         onSubmit={(event) => {
-        //             event.preventDefault();
-        //             addComment();
-        //         }}
-        //     >
-        //         <input
-        //             type="text"
-        //             name="url"
-        //             onChange={({ target }) => {
-        //                 setNewComment(target.value);
-        //             }}
-        //             placeholder="comments"
-        //             value={newComment}
-        //         />
-        //         <button type="submit">create</button>
-        //     </form>
-        //     {comments.map((comment) => (
-        //         <li key={Math.random()}>{comment}</li>
-        //     ))}
-        //     <button onClick={deleteItem} id="delete">
-        //         delete blog
-        //     </button>
-        //     <br />
-        // </div>
-
         <div className="blog-post">
             <h1 className="blog-title">{blog.title}</h1>
             <div className="blog-content">URL : {blog.url}</div>
@@ -156,7 +115,8 @@ const Blogs = () => {
                         <button type="submit" className="comment-submit">
                             Create
                         </button>
-                    </form><br/>
+                    </form>
+                    <br />
                     <ul className="comment-list">
                         {comments.map((comment, index) => (
                             <div key={index} className="comment">
@@ -168,7 +128,6 @@ const Blogs = () => {
                         Delete Blog
                     </button>
                 </div>
-
             </div>
         </div>
     );
